@@ -33,11 +33,40 @@ void updateEnemies(list<GameObject>& enemies, int& spawnTimer, int& moveTimer);
 void checkCollisions(GameObject& player, list<GameObject>& enemies, int& score, int& health);
 void clearScreen();
 bool isPositionOccupied(int x, int y, const list<GameObject>& enemies);
+void showLandingScreen();
 
 HANDLE consoleHandle = GetStdHandle(STD_OUTPUT_HANDLE);
 
+void showLandingScreen() {
+    system("cls");
+
+    CONSOLE_CURSOR_INFO cursorInfo;
+    GetConsoleCursorInfo(consoleHandle, &cursorInfo);
+    cursorInfo.bVisible = false;
+    SetConsoleCursorInfo(consoleHandle, &cursorInfo);
+
+    gotoxy(SCREEN_WIDTH / 2 - 10, SCREEN_HEIGHT / 2 - 2);
+    cout << "=============================";
+
+    gotoxy(SCREEN_WIDTH / 2 - 11, SCREEN_HEIGHT / 2);
+    cout << "     SPACE SHOOTER GAME     ";
+
+    gotoxy(SCREEN_WIDTH / 2 - 9, SCREEN_HEIGHT / 2 + 2);
+    cout << "       By Sardar Hashir      ";
+
+    gotoxy(SCREEN_WIDTH / 2 - 12, SCREEN_HEIGHT / 2 + 4);
+    cout << "   Press any key to start... ";
+
+    gotoxy(SCREEN_WIDTH / 2 - 10, SCREEN_HEIGHT / 2 + 6);
+    cout << "=============================";
+
+    _getch();
+    system("cls");
+}
+
 int main() {
     srand(time(0));
+    showLandingScreen();
     GameObject player;
     int score = 0;
     int health = INITIAL_HEALTH;
@@ -137,23 +166,24 @@ void handleInput(GameObject& player) {
     if (key == -32 || key == 0 || key == 224) {
         key = _getch();
         switch (key) {
-            case 75:
-                if (player.x > 1) player.x--;
-                break;
-            case 77:
-                if (player.x < SCREEN_WIDTH - 2) player.x++;
-                break;
+        case 75:
+            if (player.x > 1) player.x--;
+            break;
+        case 77:
+            if (player.x < SCREEN_WIDTH - 2) player.x++;
+            break;
         }
-    } else {
+    }
+    else {
         switch (tolower(key)) {
-            case 'a':
-                if (player.x > 1) player.x--;
-                break;
-            case 'd':
-                if (player.x < SCREEN_WIDTH - 2) player.x++;
-                break;
-            case 27:
-                break;
+        case 'a':
+            if (player.x > 1) player.x--;
+            break;
+        case 'd':
+            if (player.x < SCREEN_WIDTH - 2) player.x++;
+            break;
+        case 27:
+            break;
         }
     }
 }
@@ -166,7 +196,8 @@ void updateEnemies(list<GameObject>& enemies, int& spawnTimer, int& moveTimer) {
             it->y++;
             if (it->y >= SCREEN_HEIGHT - 1) {
                 it = enemies.erase(it);
-            } else {
+            }
+            else {
                 ++it;
             }
         }
@@ -177,7 +208,7 @@ void updateEnemies(list<GameObject>& enemies, int& spawnTimer, int& moveTimer) {
         int spawnX = rand() % (SCREEN_WIDTH - 2) + 1;
         int spawnY = 1;
         if (!isPositionOccupied(spawnX, spawnY, enemies)) {
-            enemies.push_back({spawnX, spawnY, ENEMY_CHAR});
+            enemies.push_back({ spawnX, spawnY, ENEMY_CHAR });
         }
     }
 }
@@ -197,7 +228,8 @@ void checkCollisions(GameObject& player, list<GameObject>& enemies, int& score, 
             score += 10;
             health--;
             it = enemies.erase(it);
-        } else {
+        }
+        else {
             ++it;
         }
     }
